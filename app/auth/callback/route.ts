@@ -25,10 +25,11 @@ export async function GET(request: Request) {
         )
         const { error } = await supabase.auth.exchangeCodeForSession(code)
         if (!error) {
-            // Once logged in, send them to your gated page
+            // Success! Send them to the protected page
             return NextResponse.redirect(`${origin}/protected`)
         }
     }
 
-    return NextResponse.redirect(`${origin}`)
+    // Error or no code: Send them back to the home page (not /login)
+    return NextResponse.redirect(`${origin}/`)
 }
