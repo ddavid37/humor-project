@@ -1,44 +1,34 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
+'use client'
 
-export default async function ProtectedPage() {
-  const cookieStore = await cookies()
+import { createBrowserClient } from '@supabase/ssr'
 
-  const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value
-          },
-        },
-      }
-  )
+export default function Home() {
+    const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
 
-  const { data: { user } } = await supabase.auth.getUser()
+    const handleLogin = async () => {
+        await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+                redirectTo: `${window.location.origin}/auth/callback`,
+            },
+        })
+    }
 
-  // If no user is found in the cookies, redirect to the landing page
-  if (!user) {
-    return redirect('/')
-  }
-
-  // Fetch the images for your gallery from the database
-  const { data: images } = await supabase.from('images').select('id, url').limit(10)
-
-  return (
-      <main className="p-10 bg-gray-50 min-h-screen text-center">
-        <h1 className="text-4xl font-extrabold mb-4 text-indigo-800">🔒 Gated Humor Vault</h1>
-        <p className="mb-10 text-gray-600">Welcome, <strong>{user.email}</strong></p>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {images?.map((img) => (
-              <div key={img.id} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
-                <img src={img.url} alt="Gated Entry" className="w-full h-64 object-cover" />
-              </div>
-          ))}
-        </div>
-      </main>
-  )
+    return (
+        <main className="flex min-h-screen items-center justify-center bg-gray-50">
+            <div className="text-center">
+                <h1 className="text-4xl font-bold mb-6">Humor Vault</h1>
+                <p className="mb-8 text-gray-600">Sign in to access the gated content</p>
+                <button
+                    onClick={handleLogin}
+                    className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700"
+                >
+                    Sign in with Google
+                </button>
+            </div>
+        </main>
+    )
 }
