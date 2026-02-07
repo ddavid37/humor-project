@@ -23,13 +23,14 @@ export async function GET(request: Request) {
                 },
             }
         )
+
         const { error } = await supabase.auth.exchangeCodeForSession(code)
         if (!error) {
-            // Success! Send them to the protected page
+            // Success! Send them to the protected page route folder
             return NextResponse.redirect(`${origin}/protected`)
         }
     }
 
-    // Error or no code: Send them back to the home page (not /login)
+    // If something went wrong, return to the landing page
     return NextResponse.redirect(`${origin}/`)
 }

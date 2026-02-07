@@ -1,34 +1,43 @@
-'use client'
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
-import { createClient } from '@supabase/supabase-js'
+export default async function ProtectedPage() {
+  const cookieStore = await cookies()
 
-export default function LoginPage() {
-  const supabase = createClient(
+  const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value
+          },
+        },
+      }
   )
 
-  const handleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        // This MUST match your folder structure /auth/callback
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // If no user is found in the cookies, redirect to the landing page
+  if (!user) {
+    return redirect('/')
   }
 
+  // Fetch the images for your gallery from the database
+  const { data: images } = await supabase.from('images').select('id, url').limit(10)
+
   return (
-      <main className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6">
-        <div className="max-w-md w-full text-center space-y-8">
-          <h1 className="text-5xl font-extrabold tracking-tight text-indigo-500">Crackd.ai</h1>
-          <p className="text-gray-400 text-lg">Sign in to access your gated humor gallery.</p>
-          <button
-              onClick={handleLogin}
-              className="flex items-center justify-center w-full gap-3 px-6 py-4 text-black bg-white rounded-full font-bold hover:bg-gray-200 transition-all shadow-xl"
-          >
-            Sign in with Google
-          </button>
+      <main className="p-10 bg-gray-50 min-h-screen text-center">
+        <h1 className="text-4xl font-extrabold mb-4 text-indigo-800">🔒 Gated Humor Vault</h1>
+        <p className="mb-10 text-gray-600">Welcome, <strong>{user.email}</strong></p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {images?.map((img) => (
+              <div key={img.id} className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                <img src={img.url} alt="Gated Entry" className="w-full h-64 object-cover" />
+              </div>
+          ))}
         </div>
       </main>
   )
