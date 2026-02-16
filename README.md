@@ -34,3 +34,13 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Accessing your Supabase database
+
+1. Go to **[Supabase Dashboard](https://supabase.com/dashboard)** and sign in.
+2. Open your project (the one whose URL and anon key are in `.env.local`).
+3. In the left sidebar, open **Table Editor**.
+4. Click the **caption_votes** table.
+5. You’ll see the list of columns and their types. Note the **exact** column names (e.g. `caption_id`, `user_id`, or `captionId`, `userId`, etc.).
+
+If voting fails with “Could not find the '…' column”, the insert is using the wrong names. Update `app/api/captions/[captionId]/vote/route.ts` so the object passed to `.insert({ ... })` uses the exact column names from the Table Editor.

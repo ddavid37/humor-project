@@ -41,16 +41,18 @@ export default async function ProtectedGallery({
             (typeof row.id === 'string' ? '' : Object.values(row).find(v => typeof v === 'string' && v !== row.image_url) ?? '')
           )
         : ''
-    const imageUrl =
-        (current as Record<string, unknown> | undefined)?.image_url ??
-        (current as { images?: { url?: string } } | undefined)?.images?.url ??
-        null
-    const imageId = (current as Record<string, unknown> | undefined)?.image_id as string | undefined
+    const r = row ?? {}
+    const imageUrl = (r.image_url ?? r.url ?? (r as { images?: { url?: string } }).images?.url) as string | null | undefined
+    const imageId = (r.image_id ?? r.imageId) as string | undefined
 
-    let displayUrl = imageUrl
+    let displayUrl: string | null = imageUrl ? String(imageUrl) : null
     if (!displayUrl && imageId) {
         const { data: img } = await supabase.from('images').select('url').eq('id', imageId).single()
         if (img?.url) displayUrl = img.url
+    }
+    if (!displayUrl && list.length > 0 && currentIndex >= 0) {
+        const { data: images } = await supabase.from('images').select('id, url').order('id').limit(list.length)
+        if (images && images[currentIndex]) displayUrl = images[currentIndex].url
     }
 
     return (
@@ -90,7 +92,7 @@ export default async function ProtectedGallery({
                             <p className="text-lg mb-6 text-gray-800">
                                 {String(captionText)}
                             </p>
-                            <VoteButtons captionId={current.id} isLoggedIn={!!user} />
+                            <VoteButtons captionId={current.id} isLoggedIn={!!user} currentPage={page} totalPages={total} />
                         </div>
                         <div className="flex justify-between items-center p-4 border-t border-gray-200 bg-gray-50">
                             <span className="text-sm text-gray-500">

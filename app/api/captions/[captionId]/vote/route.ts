@@ -29,19 +29,26 @@ export async function POST(
     }
     const vote = typeof body.vote === 'number' ? body.vote : 1 // default to upvote
 
-    // 2. Insert the vote into caption_votes table
+    // 2. Insert the vote into caption_votes table (class DB columns: profile_id, caption_id, vote_value, created/modified datetime)
+    const now = new Date().toISOString()
     const { error: insertError } = await supabase
         .from('caption_votes')
         .insert({
             caption_id: captionId,
-            user_id: user.id,
-            vote,
+            profile_id: user.id,
+            vote_value: vote,
+            created_datetime_utc: now,
+            modified_datetime_utc: now,
         })
 
     if (insertError) {
-        console.error('Insert error:', insertError)
+        console.error('Vote insert error:', insertError)
         return NextResponse.json(
-            { error: 'Failed to insert vote', details: insertError.message },
+            {
+                error: 'Failed to insert vote',
+                details: insertError.message,
+                code: insertError.code,
+            },
             { status: 500 }
         )
     }

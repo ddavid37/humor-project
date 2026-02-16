@@ -1,13 +1,17 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 type VoteButtonsProps = {
     captionId: string
     isLoggedIn: boolean
+    currentPage: number
+    totalPages: number
 }
 
-export function VoteButtons({ captionId, isLoggedIn }: VoteButtonsProps) {
+export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: VoteButtonsProps) {
+    const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [success, setSuccess] = useState(false)
@@ -31,18 +35,19 @@ export function VoteButtons({ captionId, isLoggedIn }: VoteButtonsProps) {
 
             if (!res.ok) {
                 const text = await res.text()
-                let data: { error?: string } = {}
+                let data: { error?: string; details?: string } = {}
                 try {
                     data = text ? JSON.parse(text) : {}
                 } catch {
                     data = {}
                 }
-                throw new Error(data.error || 'Failed to vote')
+                const msg = data.details ? `${data.error}: ${data.details}` : (data.error || 'Failed to vote')
+                throw new Error(msg)
             }
 
             setSuccess(true)
-            // Clear success message after 2 seconds
-            setTimeout(() => setSuccess(false), 2000)
+            const nextPage = currentPage < totalPages ? currentPage + 1 : 1
+            router.push(`/protected?page=${nextPage}`)
         } catch (e: any) {
             setError(e.message || 'Failed to vote')
         } finally {
