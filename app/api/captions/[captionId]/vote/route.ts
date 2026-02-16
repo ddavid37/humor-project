@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from '@/lib/supabaseServer'
 
 export async function POST(
     req: NextRequest,
-    { params }: { params: { captionId: string } }
+    { params }: { params: Promise<{ captionId: string }> }
 ) {
     const supabase = await createSupabaseServerClient()
 
@@ -17,10 +17,16 @@ export async function POST(
         return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
 
-    const captionId = params.captionId
+    const { captionId } = await params
 
     // Get vote value from request body (1 for upvote, -1 for downvote)
-    const body = await req.json().catch(() => ({}))
+    let body: { vote?: number } = {}
+    try {
+        const text = await req.text()
+        body = text ? JSON.parse(text) : {}
+    } catch {
+        body = {}
+    }
     const vote = typeof body.vote === 'number' ? body.vote : 1 // default to upvote
 
     // 2. Insert the vote into caption_votes table

@@ -30,7 +30,13 @@ export function VoteButtons({ captionId, isLoggedIn }: VoteButtonsProps) {
             })
 
             if (!res.ok) {
-                const data = await res.json().catch(() => ({}))
+                const text = await res.text()
+                let data: { error?: string } = {}
+                try {
+                    data = text ? JSON.parse(text) : {}
+                } catch {
+                    data = {}
+                }
                 throw new Error(data.error || 'Failed to vote')
             }
 
