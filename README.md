@@ -43,4 +43,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 4. Click the **caption_votes** table.
 5. You’ll see the list of columns and their types. Note the **exact** column names (e.g. `caption_id`, `user_id`, or `captionId`, `userId`, etc.).
 
+Once you vote, the next pege will be loaded
+
 If voting fails with “Could not find the '…' column”, the insert is using the wrong names. Update `app/api/captions/[captionId]/vote/route.ts` so the object passed to `.insert({ ... })` uses the exact column names from the Table Editor.
