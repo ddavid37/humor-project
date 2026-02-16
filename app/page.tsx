@@ -3,10 +3,21 @@
 import { createBrowserClient } from '@supabase/ssr'
 
 export default function Home() {
-    const supabase = createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    
+    if (!supabaseUrl || !supabaseKey) {
+        return (
+            <main className="flex min-h-screen items-center justify-center bg-gray-50">
+                <div className="text-center">
+                    <h1 className="text-4xl font-bold mb-6 text-red-600">Configuration Error</h1>
+                    <p className="mb-8 text-gray-600">Supabase environment variables are missing.</p>
+                </div>
+            </main>
+        )
+    }
+    
+    const supabase = createBrowserClient(supabaseUrl, supabaseKey)
 
     const handleLogin = async () => {
         await supabase.auth.signInWithOAuth({
