@@ -53,6 +53,7 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
             router.push(`/protected?page=${nextPage}`)
         } catch (e: unknown) {
             setError(e instanceof Error ? e.message : 'Failed to vote')
+        } finally {
             setLoading(false)
         }
     }
