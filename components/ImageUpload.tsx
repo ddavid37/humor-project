@@ -3,7 +3,6 @@
 import { useState, useRef } from 'react'
 
 const API_BASE = 'https://api.almostcrackd.ai'
-
 const STEPS = ['URL', 'Upload', 'Register', 'Captions']
 
 interface CaptionRecord {
@@ -20,6 +19,7 @@ interface Props {
 
 export function ImageUpload({ accessToken }: Props) {
     const [file, setFile] = useState<File | null>(null)
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null)
     const [status, setStatus] = useState<'idle' | 'uploading' | 'done' | 'error'>('idle')
     const [step, setStep] = useState(0)
     const [captions, setCaptions] = useState<CaptionRecord[]>([])
@@ -28,7 +28,9 @@ export function ImageUpload({ accessToken }: Props) {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const f = e.target.files?.[0] ?? null
+        if (previewUrl) URL.revokeObjectURL(previewUrl)
         setFile(f)
+        setPreviewUrl(f ? URL.createObjectURL(f) : null)
         setCaptions([])
         setError(null)
         setStatus('idle')
@@ -85,7 +87,9 @@ export function ImageUpload({ accessToken }: Props) {
     }
 
     const reset = () => {
+        if (previewUrl) URL.revokeObjectURL(previewUrl)
         setFile(null)
+        setPreviewUrl(null)
         setCaptions([])
         setError(null)
         setStatus('idle')
@@ -96,84 +100,103 @@ export function ImageUpload({ accessToken }: Props) {
     const getCaptionText = (c: CaptionRecord) =>
         String(c.caption ?? c.content ?? c.text ?? c.body ?? Object.values(c).find(v => typeof v === 'string') ?? '')
 
-    return (
-        <div className="space-y-3">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Generate Captions</p>
+    const bestCaption = captions.length > 0 ? getCaptionText(captions[0]) : null
 
-            {/* Picker row */}
-            <div className="flex items-center gap-2">
-                <input
-                    ref={inputRef}
-                    type="file"
-                    accept="image/jpeg,image/jpg,image/png,image/webp,image/gif,image/heic"
-                    onChange={handleFileChange}
-                    className="hidden"
-                    aria-label="Choose an image to upload"
-                />
-                <button
-                    onClick={() => inputRef.current?.click()}
-                    className="flex-1 text-left px-3 py-2 rounded-lg border border-dashed border-gray-300 text-sm text-gray-500 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors truncate"
-                >
-                    {file ? `📎 ${file.name}` : '+ Choose an image…'}
-                </button>
-                {file && status !== 'uploading' && (
-                    <button
-                        onClick={handleUpload}
-                        className="shrink-0 px-3 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors font-medium"
-                    >
-                        ✨ Go
-                    </button>
-                )}
-                {status === 'done' && (
-                    <button onClick={reset} className="shrink-0 text-xs text-gray-400 hover:text-gray-600">
-                        ✕
-                    </button>
+    return (
+        <>
+            <input
+                ref={inputRef}
+                type="file"
+                accept="image/jpeg,image/jpg,image/png,image/webp,image/gif,image/heic"
+                onChange={handleFileChange}
+                className="hidden"
+                aria-label="Choose an image to upload"
+            />
+
+            {/* Image area — mirrors the ranking panel */}
+            <div
+                className="flex-1 bg-gray-950 flex items-center justify-center overflow-hidden cursor-pointer"
+                onClick={() => { if (!previewUrl) inputRef.current?.click() }}
+            >
+                {previewUrl ? (
+                    <img
+                        src={previewUrl}
+                        alt="Uploaded image"
+                        className="max-h-full max-w-full object-contain"
+                    />
+                ) : (
+                    <div className="text-center select-none">
+                        <p className="text-5xl mb-4">📤</p>
+                        <p className="text-gray-400 text-sm font-medium">Click to upload an image</p>
+                        <p className="text-gray-600 text-xs mt-1">JPEG · PNG · WebP · GIF · HEIC</p>
+                    </div>
                 )}
             </div>
 
-            {/* Step progress */}
-            {status === 'uploading' && (
-                <div className="flex items-center gap-1">
-                    {STEPS.map((label, i) => {
-                        const s = i + 1
-                        const done = step > s
-                        const active = step === s
-                        return (
-                            <div key={s} className="flex items-center gap-1">
-                                <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium transition-colors
-                                    ${done ? 'bg-green-100 text-green-700' : active ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
-                                    <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px]
-                                        ${done ? 'bg-green-500 text-white' : active ? 'bg-white text-indigo-600 animate-pulse' : 'bg-gray-300'}`}>
-                                        {done ? '✓' : s}
-                                    </span>
-                                    {label}
-                                </div>
-                                {s < 4 && <span className="text-gray-300 text-[10px]">›</span>}
-                            </div>
-                        )
-                    })}
-                </div>
-            )}
+            {/* Caption + controls — mirrors the ranking panel */}
+            <div className="shrink-0 px-6 py-5 bg-white border-t border-gray-100 space-y-4">
 
-            {/* Error */}
-            {error && (
-                <p className="text-xs text-red-500">
-                    {error}{' '}
-                    <button onClick={handleUpload} className="underline hover:text-red-700">Retry</button>
-                </p>
-            )}
-
-            {/* Results */}
-            {status === 'done' && captions.length > 0 && (
-                <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
-                    <p className="text-xs font-medium text-gray-400">{captions.length} caption{captions.length !== 1 ? 's' : ''} generated</p>
-                    {captions.map((c, i) => (
-                        <div key={i} className="px-3 py-2 bg-indigo-50 border border-indigo-100 rounded-lg text-sm text-gray-700 leading-snug">
-                            {getCaptionText(c)}
+                {/* Caption display */}
+                <div className="min-h-[2.5rem]">
+                    {status === 'uploading' && (
+                        <div className="flex items-center gap-1 flex-wrap">
+                            {STEPS.map((label, i) => {
+                                const s = i + 1
+                                const done = step > s
+                                const active = step === s
+                                return (
+                                    <div key={s} className="flex items-center gap-1">
+                                        <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium transition-colors
+                                            ${done ? 'bg-green-100 text-green-700' : active ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'}`}>
+                                            <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-[9px]
+                                                ${done ? 'bg-green-500 text-white' : active ? 'bg-white text-indigo-600 animate-pulse' : 'bg-gray-300'}`}>
+                                                {done ? '✓' : s}
+                                            </span>
+                                            {label}
+                                        </div>
+                                        {s < 4 && <span className="text-gray-300 text-[10px]">›</span>}
+                                    </div>
+                                )
+                            })}
                         </div>
-                    ))}
+                    )}
+                    {status === 'done' && bestCaption && (
+                        <p className="text-xl font-medium text-gray-800 leading-snug">{bestCaption}</p>
+                    )}
+                    {status === 'error' && (
+                        <p className="text-sm text-red-500">{error}</p>
+                    )}
+                    {(status === 'idle') && (
+                        <p className="text-xl text-gray-300 leading-snug">Caption will appear here…</p>
+                    )}
                 </div>
-            )}
-        </div>
+
+                {/* Controls */}
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => inputRef.current?.click()}
+                        className="flex-1 py-2.5 rounded-xl border border-dashed border-gray-300 text-sm text-gray-500 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors truncate px-3"
+                    >
+                        {file ? `📎 ${file.name}` : '+ Choose image'}
+                    </button>
+                    {file && status !== 'uploading' && (
+                        <button
+                            onClick={handleUpload}
+                            className="shrink-0 py-2.5 px-4 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 active:scale-95 transition-all"
+                        >
+                            ✨ Generate
+                        </button>
+                    )}
+                    {(status === 'done' || status === 'error') && (
+                        <button
+                            onClick={reset}
+                            className="shrink-0 py-2.5 px-3 rounded-xl border border-gray-200 text-sm text-gray-500 hover:bg-gray-50 transition-colors"
+                        >
+                            ✕
+                        </button>
+                    )}
+                </div>
+            </div>
+        </>
     )
 }

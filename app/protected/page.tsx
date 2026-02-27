@@ -17,7 +17,6 @@ export default async function ProtectedGallery({
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return redirect('/')
 
-    // Get access token so the client-side upload component can call the caption API
     const { data: { session } } = await supabase.auth.getSession()
     const accessToken = session?.access_token ?? ''
 
@@ -70,82 +69,93 @@ export default async function ProtectedGallery({
                 </div>
             </header>
 
-            {/* ── Content ── */}
-            <div className="flex-1 flex overflow-hidden">
-
-                {/* Image panel */}
-                <div className="flex-1 bg-gray-950 flex items-center justify-center overflow-hidden">
-                    {displayUrl ? (
-                        <img
-                            src={displayUrl}
-                            alt="Caption image"
-                            className="max-h-full max-w-full object-contain"
-                        />
-                    ) : captionsError ? (
-                        <p className="text-gray-500 text-sm">Failed to load image.</p>
-                    ) : (
-                        <p className="text-gray-600 text-sm">No image available.</p>
-                    )}
+            {/* ── Panel labels ── */}
+            <div className="shrink-0 flex border-b border-gray-100 bg-gray-50">
+                <div className="flex-1 px-6 py-2 text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                    Rate this caption
                 </div>
+                <div className="flex-1 px-6 py-2 text-xs font-semibold text-gray-400 uppercase tracking-widest border-l border-gray-100">
+                    Generate captions
+                </div>
+            </div>
 
-                {/* ── Sidebar ── */}
-                <aside className="w-96 shrink-0 flex flex-col border-l border-gray-200 bg-white overflow-hidden">
+            {/* ── Two equal panels ── */}
+            <div className="flex-1 flex overflow-hidden divide-x divide-gray-200">
 
-                    {/* Upload section */}
-                    <div className="shrink-0 border-b border-gray-100 px-5 py-4">
-                        <ImageUpload accessToken={accessToken} />
-                    </div>
+                {/* ── Left: Ranking panel ── */}
+                <div className="flex-1 flex flex-col overflow-hidden">
 
-                    {/* Caption text */}
-                    <div className="flex-1 overflow-y-auto px-5 py-5">
-                        {captionsError ? (
-                            <p className="text-red-400 text-sm">Error loading captions.</p>
-                        ) : total === 0 ? (
-                            <p className="text-gray-400 text-sm">No captions found.</p>
-                        ) : current ? (
-                            <p className="text-gray-800 text-lg leading-relaxed">{captionText}</p>
+                    {/* Image */}
+                    <div className="flex-1 bg-gray-950 flex items-center justify-center overflow-hidden">
+                        {displayUrl ? (
+                            <img
+                                src={displayUrl}
+                                alt="Caption image"
+                                className="max-h-full max-w-full object-contain"
+                            />
+                        ) : captionsError ? (
+                            <p className="text-gray-500 text-sm">Failed to load image.</p>
                         ) : (
-                            <p className="text-gray-400 text-sm">No caption for this page.</p>
+                            <p className="text-gray-600 text-sm">No image available.</p>
                         )}
                     </div>
 
-                    {/* Vote + Navigation */}
-                    {current && (
-                        <div className="shrink-0 border-t border-gray-100 px-5 py-4 space-y-4">
-                            <VoteButtons
-                                captionId={current.id}
-                                isLoggedIn={!!user}
-                                currentPage={page}
-                                totalPages={total}
-                            />
-                            <div className="flex items-center justify-between">
-                                <span className="text-xs text-gray-400">{page} of {total}</span>
-                                <div className="flex gap-2">
+                    {/* Caption + controls */}
+                    <div className="shrink-0 px-6 py-5 bg-white border-t border-gray-100 space-y-4">
+
+                        {/* Caption text */}
+                        <div className="min-h-[2.5rem]">
+                            {captionsError ? (
+                                <p className="text-red-400 text-sm">Error loading captions.</p>
+                            ) : current ? (
+                                <p className="text-xl font-medium text-gray-800 leading-snug">{captionText}</p>
+                            ) : (
+                                <p className="text-xl text-gray-300 leading-snug">No caption found.</p>
+                            )}
+                        </div>
+
+                        {/* Vote + navigation */}
+                        {current && (
+                            <div className="flex items-center justify-between gap-4">
+                                <VoteButtons
+                                    captionId={current.id}
+                                    isLoggedIn={!!user}
+                                    currentPage={page}
+                                    totalPages={total}
+                                />
+                                <div className="flex items-center gap-2 shrink-0">
+                                    <span className="text-xs text-gray-400 mr-1">{page}/{total}</span>
                                     {page > 1 ? (
                                         <Link
                                             href={`/protected?page=${page - 1}`}
-                                            className="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
+                                            className="px-3 py-2 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
                                         >
                                             ← Prev
                                         </Link>
                                     ) : (
-                                        <span className="px-3 py-1.5 text-gray-300 text-sm">← Prev</span>
+                                        <span className="px-3 py-2 text-gray-300 text-sm">← Prev</span>
                                     )}
                                     {page < total ? (
                                         <Link
                                             href={`/protected?page=${page + 1}`}
-                                            className="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition-colors"
+                                            className="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition-colors"
                                         >
                                             Next →
                                         </Link>
                                     ) : (
-                                        <span className="px-3 py-1.5 text-gray-300 text-sm">Next →</span>
+                                        <span className="px-3 py-2 text-gray-300 text-sm">Next →</span>
                                     )}
                                 </div>
                             </div>
-                        </div>
-                    )}
-                </aside>
+                        )}
+                    </div>
+                </div>
+
+                {/* ── Right: Generate captions panel ── */}
+                <div className="flex-1 flex flex-col overflow-hidden">
+                    <ImageUpload accessToken={accessToken} />
+                </div>
+
             </div>
         </main>
     )
