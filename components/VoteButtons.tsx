@@ -17,6 +17,12 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
 
     const nextPage = currentPage < totalPages ? currentPage + 1 : 1
 
+    // Reset state whenever the caption changes (client-side nav reuses this component)
+    useEffect(() => {
+        setLoading(false)
+        setError(null)
+    }, [captionId])
+
     // Prefetch the next page as soon as this component mounts
     useEffect(() => {
         router.prefetch(`/protected?page=${nextPage}`)
