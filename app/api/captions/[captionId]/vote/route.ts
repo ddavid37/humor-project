@@ -29,25 +29,28 @@ export async function POST(
     }
     const vote = typeof body.vote === 'number' ? body.vote : 1 // default to upvote
 
-    // 2. Insert the vote into caption_votes table (class DB columns: profile_id, caption_id, vote_value, created/modified datetime)
+    // 2. Upsert the vote — if a row already exists for this user+caption, update vote_value instead of failing
     const now = new Date().toISOString()
-    const { error: insertError } = await supabase
+    const { error: upsertError } = await supabase
         .from('caption_votes')
-        .insert({
-            caption_id: captionId,
-            profile_id: user.id,
-            vote_value: vote,
-            created_datetime_utc: now,
-            modified_datetime_utc: now,
-        })
+        .upsert(
+            {
+                caption_id: captionId,
+                profile_id: user.id,
+                vote_value: vote,
+                created_datetime_utc: now,
+                modified_datetime_utc: now,
+            },
+            { onConflict: 'profile_id,caption_id' }
+        )
 
-    if (insertError) {
-        console.error('Vote insert error:', insertError)
+    if (upsertError) {
+        console.error('Vote upsert error:', upsertError)
         return NextResponse.json(
             {
                 error: 'Failed to insert vote',
-                details: insertError.message,
-                code: insertError.code,
+                details: upsertError.message,
+                code: upsertError.code,
             },
             { status: 500 }
         )
