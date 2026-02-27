@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { createSupabaseServerClient } from '@/lib/supabaseServer'
 import { VoteButtons } from '@/components/VoteButtons'
 import { LogoutButton } from '@/components/LogoutButton'
+import { ImageUpload } from '@/components/ImageUpload'
 
 type SearchParams = { page?: string }
 
@@ -18,6 +19,10 @@ export default async function ProtectedGallery({
     if (!user) {
         return redirect('/')
     }
+
+    // Get access token so the client-side upload component can call the caption API
+    const { data: { session } } = await supabase.auth.getSession()
+    const accessToken = session?.access_token ?? ''
 
     // Select all columns so we don't depend on exact column names (class DB may use content, body, etc.)
     const { data: captions, error: captionsError } = await supabase
@@ -64,9 +69,11 @@ export default async function ProtectedGallery({
                     </h1>
                     <LogoutButton />
                 </div>
-                <p className="mb-10 text-gray-600 text-center">
+                <p className="mb-6 text-gray-600 text-center">
                     You are logged in as <strong>{user.email}</strong>
                 </p>
+
+                <ImageUpload accessToken={accessToken} />
 
                 {err ? (
                     <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 text-center">
