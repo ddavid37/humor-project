@@ -69,21 +69,16 @@ export default async function ProtectedGallery({
                 </div>
             </header>
 
-            {/* ── Panel labels ── */}
-            <div className="shrink-0 flex border-b border-gray-100 bg-gray-50">
-                <div className="flex-1 px-6 py-2 text-xs font-semibold text-gray-400 uppercase tracking-widest">
-                    Rate this caption
-                </div>
-                <div className="flex-1 px-6 py-2 text-xs font-semibold text-gray-400 uppercase tracking-widest border-l border-gray-100">
-                    Generate captions
-                </div>
-            </div>
-
-            {/* ── Two equal panels ── */}
-            <div className="flex-1 flex overflow-hidden divide-x divide-gray-200">
+            {/* ── Two equal panels (CSS grid guarantees identical column widths) ── */}
+            <div className="flex-1 grid grid-cols-2 overflow-hidden divide-x divide-gray-200">
 
                 {/* ── Left: Ranking panel ── */}
-                <div className="flex-1 flex flex-col overflow-hidden">
+                <div className="flex flex-col overflow-hidden">
+
+                    {/* Centered label */}
+                    <div className="shrink-0 py-2 border-b border-gray-100 bg-gray-50 text-center text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                        Rate this caption
+                    </div>
 
                     {/* Image */}
                     <div className="flex-1 bg-gray-950 flex items-center justify-center overflow-hidden">
@@ -100,46 +95,38 @@ export default async function ProtectedGallery({
                         )}
                     </div>
 
-                    {/* Caption + controls */}
-                    <div className="shrink-0 px-6 py-5 bg-white border-t border-gray-100 space-y-4">
+                    {/* Caption + controls — fixed height so both panels match */}
+                    <div className="shrink-0 h-40 px-6 py-4 bg-white border-t border-gray-100 flex flex-col items-center justify-between">
 
-                        {/* Caption text */}
-                        <div className="min-h-[2.5rem]">
+                        {/* Caption centered */}
+                        <p className="text-xl font-medium text-gray-800 leading-snug text-center line-clamp-2">
                             {captionsError ? (
-                                <p className="text-red-400 text-sm">Error loading captions.</p>
-                            ) : current ? (
-                                <p className="text-xl font-medium text-gray-800 leading-snug">{captionText}</p>
-                            ) : (
-                                <p className="text-xl text-gray-300 leading-snug">No caption found.</p>
+                                <span className="text-red-400 text-sm">Error loading captions.</span>
+                            ) : current ? captionText : (
+                                <span className="text-gray-300">No caption found.</span>
                             )}
-                        </div>
+                        </p>
 
-                        {/* Vote + navigation */}
+                        {/* Controls centered */}
                         {current && (
-                            <div className="flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3">
                                 <VoteButtons
                                     captionId={current.id}
                                     isLoggedIn={!!user}
                                     currentPage={page}
                                     totalPages={total}
                                 />
-                                <div className="flex items-center gap-2 shrink-0">
-                                    <span className="text-xs text-gray-400 mr-1">{page}/{total}</span>
+                                <div className="flex items-center gap-1.5 pl-3 border-l border-gray-200">
+                                    <span className="text-xs text-gray-400">{page}/{total}</span>
                                     {page > 1 ? (
-                                        <Link
-                                            href={`/protected?page=${page - 1}`}
-                                            className="px-3 py-2 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors"
-                                        >
+                                        <Link href={`/protected?page=${page - 1}`} className="px-3 py-2 rounded-xl bg-gray-100 text-gray-600 text-sm hover:bg-gray-200 transition-colors">
                                             ← Prev
                                         </Link>
                                     ) : (
                                         <span className="px-3 py-2 text-gray-300 text-sm">← Prev</span>
                                     )}
                                     {page < total ? (
-                                        <Link
-                                            href={`/protected?page=${page + 1}`}
-                                            className="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition-colors"
-                                        >
+                                        <Link href={`/protected?page=${page + 1}`} className="px-3 py-2 rounded-xl bg-indigo-600 text-white text-sm hover:bg-indigo-700 transition-colors">
                                             Next →
                                         </Link>
                                     ) : (
@@ -152,7 +139,7 @@ export default async function ProtectedGallery({
                 </div>
 
                 {/* ── Right: Generate captions panel ── */}
-                <div className="flex-1 flex flex-col overflow-hidden">
+                <div className="flex flex-col overflow-hidden">
                     <ImageUpload accessToken={accessToken} />
                 </div>
 

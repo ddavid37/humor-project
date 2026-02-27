@@ -113,7 +113,12 @@ export function ImageUpload({ accessToken }: Props) {
                 aria-label="Choose an image to upload"
             />
 
-            {/* Image area — mirrors the ranking panel */}
+            {/* Centered label — matches left panel */}
+            <div className="shrink-0 py-2 border-b border-gray-100 bg-gray-50 text-center text-xs font-semibold text-gray-400 uppercase tracking-widest">
+                Generate captions
+            </div>
+
+            {/* Image area — click anywhere on dark area to pick file */}
             <div
                 className="flex-1 bg-gray-950 flex items-center justify-center overflow-hidden cursor-pointer"
                 onClick={() => { if (!previewUrl) inputRef.current?.click() }}
@@ -133,13 +138,13 @@ export function ImageUpload({ accessToken }: Props) {
                 )}
             </div>
 
-            {/* Caption + controls — mirrors the ranking panel */}
-            <div className="shrink-0 px-6 py-5 bg-white border-t border-gray-100 space-y-4">
+            {/* Caption + controls — fixed h-40 matches left panel exactly */}
+            <div className="shrink-0 h-40 px-6 py-4 bg-white border-t border-gray-100 flex flex-col items-center justify-between">
 
-                {/* Caption display */}
-                <div className="min-h-[2.5rem]">
+                {/* Caption centered */}
+                <div className="text-center">
                     {status === 'uploading' && (
-                        <div className="flex items-center gap-1 flex-wrap">
+                        <div className="flex items-center justify-center gap-1 flex-wrap">
                             {STEPS.map((label, i) => {
                                 const s = i + 1
                                 const done = step > s
@@ -161,28 +166,28 @@ export function ImageUpload({ accessToken }: Props) {
                         </div>
                     )}
                     {status === 'done' && bestCaption && (
-                        <p className="text-xl font-medium text-gray-800 leading-snug">{bestCaption}</p>
+                        <p className="text-xl font-medium text-gray-800 leading-snug line-clamp-2">{bestCaption}</p>
                     )}
                     {status === 'error' && (
                         <p className="text-sm text-red-500">{error}</p>
                     )}
-                    {(status === 'idle') && (
+                    {status === 'idle' && (
                         <p className="text-xl text-gray-300 leading-snug">Caption will appear here…</p>
                     )}
                 </div>
 
-                {/* Controls */}
-                <div className="flex items-center gap-2">
+                {/* Controls centered */}
+                <div className="flex items-center gap-2 w-full justify-center">
                     <button
                         onClick={() => inputRef.current?.click()}
-                        className="flex-1 py-2.5 rounded-xl border border-dashed border-gray-300 text-sm text-gray-500 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors truncate px-3"
+                        className="py-2.5 px-4 rounded-xl border border-dashed border-gray-300 text-sm text-gray-500 hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors truncate max-w-[200px]"
                     >
                         {file ? `📎 ${file.name}` : '+ Choose image'}
                     </button>
                     {file && status !== 'uploading' && (
                         <button
                             onClick={handleUpload}
-                            className="shrink-0 py-2.5 px-4 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 active:scale-95 transition-all"
+                            className="py-2.5 px-4 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 active:scale-95 transition-all"
                         >
                             ✨ Generate
                         </button>
@@ -190,7 +195,7 @@ export function ImageUpload({ accessToken }: Props) {
                     {(status === 'done' || status === 'error') && (
                         <button
                             onClick={reset}
-                            className="shrink-0 py-2.5 px-3 rounded-xl border border-gray-200 text-sm text-gray-500 hover:bg-gray-50 transition-colors"
+                            className="py-2.5 px-3 rounded-xl border border-gray-200 text-sm text-gray-500 hover:bg-gray-50 transition-colors"
                         >
                             ✕
                         </button>
