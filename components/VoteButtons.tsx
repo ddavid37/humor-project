@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 type VoteButtonsProps = {
@@ -14,7 +14,13 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const [success, setSuccess] = useState(false)
+
+    const nextPage = currentPage < totalPages ? currentPage + 1 : 1
+
+    // Prefetch the next page as soon as this component mounts
+    useEffect(() => {
+        router.prefetch(`/protected?page=${nextPage}`)
+    }, [router, nextPage])
 
     async function handleVote(vote: number) {
         if (!isLoggedIn) {
@@ -24,7 +30,6 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
 
         setLoading(true)
         setError(null)
-        setSuccess(false)
 
         try {
             const res = await fetch(`/api/captions/${captionId}/vote`, {
@@ -45,12 +50,9 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
                 throw new Error(msg)
             }
 
-            setSuccess(true)
-            const nextPage = currentPage < totalPages ? currentPage + 1 : 1
             router.push(`/protected?page=${nextPage}`)
-        } catch (e: any) {
-            setError(e.message || 'Failed to vote')
-        } finally {
+        } catch (e: unknown) {
+            setError(e instanceof Error ? e.message : 'Failed to vote')
             setLoading(false)
         }
     }
@@ -75,9 +77,6 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
             </div>
             {error && (
                 <span className="text-sm text-red-500">{error}</span>
-            )}
-            {success && (
-                <span className="text-sm text-green-500">Vote submitted!</span>
             )}
             {!isLoggedIn && (
                 <span className="text-sm text-gray-500">Sign in to vote</span>
