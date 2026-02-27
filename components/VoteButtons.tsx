@@ -65,29 +65,25 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
     }
 
     return (
-        <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-2">
+        <div className="flex flex-col gap-2">
+            <div className="flex gap-2">
                 <button
                     onClick={() => handleVote(1)}
                     disabled={loading || !isLoggedIn}
-                    className="px-4 py-2 rounded-lg bg-green-600 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-green-700 transition-colors"
+                    className="flex-1 py-2.5 rounded-xl bg-green-500 text-white font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-green-600 active:scale-95 transition-all"
                 >
                     👍 Upvote
                 </button>
                 <button
                     onClick={() => handleVote(-1)}
                     disabled={loading || !isLoggedIn}
-                    className="px-4 py-2 rounded-lg bg-red-600 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-700 transition-colors"
+                    className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-600 active:scale-95 transition-all"
                 >
                     👎 Downvote
                 </button>
             </div>
-            {error && (
-                <span className="text-sm text-red-500">{error}</span>
-            )}
-            {!isLoggedIn && (
-                <span className="text-sm text-gray-500">Sign in to vote</span>
-            )}
+            {error && <span className="text-xs text-red-500 text-center">{error}</span>}
+            {!isLoggedIn && <span className="text-xs text-gray-400 text-center">Sign in to vote</span>}
         </div>
     )
 }
