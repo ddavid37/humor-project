@@ -108,8 +108,8 @@ export default async function DashboardPage() {
                                         <p className="text-slate-300 truncate">{img.url ?? '—'}</p>
                                         <p className="text-slate-500 text-xs">
                                             {img.created_at
-                                                ? new Date(img.created_at).toLocaleDateString()}
-                                            : '—'}
+                                                ? new Date(img.created_at).toLocaleDateString()
+                                                : '—'}
                                         </p>
                                     </div>
                                     <Link
