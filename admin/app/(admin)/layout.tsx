@@ -32,7 +32,7 @@ export default async function AdminLayout({
                             rel="noopener noreferrer"
                             className="text-sm text-slate-400 hover:text-white"
                         >
-                            View main site →
+                            View main site
                         </a>
                         <span className="text-sm text-slate-500">Admin</span>
                     </div>
