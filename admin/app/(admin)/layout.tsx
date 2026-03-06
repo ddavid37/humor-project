@@ -26,16 +26,14 @@ export default async function AdminLayout({
                         <Link href="/captions" className="text-slate-300 hover:text-white">Captions</Link>
                     </nav>
                     <div className="flex items-center gap-4">
-                        {process.env.NEXT_PUBLIC_MAIN_APP_URL && (
-                            <a
-                                href={process.env.NEXT_PUBLIC_MAIN_APP_URL}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-sm text-slate-400 hover:text-white"
-                            >
-                                View main site →
-                            </a>
-                        )}
+                        <a
+                            href={process.env.NEXT_PUBLIC_MAIN_APP_URL || 'https://humor-project-wine.vercel.app'}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-slate-400 hover:text-white"
+                        >
+                            View main site →
+                        </a>
                         <span className="text-sm text-slate-500">Admin</span>
                     </div>
                 </div>
