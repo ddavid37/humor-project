@@ -17,6 +17,13 @@ export default async function ProtectedGallery({
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return redirect('/')
 
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_superadmin')
+        .eq('id', user.id)
+        .single()
+    const isSuperAdmin = profile?.is_superadmin === true
+
     const { data: { session } } = await supabase.auth.getSession()
     const accessToken = session?.access_token ?? ''
 
@@ -64,6 +71,16 @@ export default async function ProtectedGallery({
                     <h1 className="text-base font-bold text-gray-900 tracking-tight">Gated Humor Vault</h1>
                 </div>
                 <div className="flex items-center gap-4">
+                    {isSuperAdmin && process.env.NEXT_PUBLIC_ADMIN_APP_URL && (
+                        <a
+                            href={process.env.NEXT_PUBLIC_ADMIN_APP_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
+                        >
+                            Admin →
+                        </a>
+                    )}
                     <span className="text-sm text-gray-400 hidden sm:block">{user.email}</span>
                     <LogoutButton />
                 </div>

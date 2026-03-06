@@ -34,6 +34,7 @@ Do **not** change RLS policies; use the above to bootstrap your own superadmin.
 2. Copy the contents of this `admin/` folder into the new repo (or use this folder as the root of the new repo).
 3. In Vercel project settings, set:
    - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (same as your main app).
+   - `NEXT_PUBLIC_MAIN_APP_URL` = your main app URL (e.g. `https://humor-project-wine.vercel.app`) so "View main site →" works in the header.
 4. **Turn off Vercel “Deployment Protection”** (e.g. under Settings → Deployment Protection) so you can open the app in Incognito.
 5. Submit the **commit-specific URL** of this admin app (and of your caption/rating app) in the course Submissions section.
 

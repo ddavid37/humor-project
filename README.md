@@ -31,6 +31,9 @@ Alternatively, you can simply entered the publicly server hoster using the link:
 
 **[Public Link](https://humor-project-wine.vercel.app/)**
 
+To show the "Admin →" link (for superadmins) on the protected page, set in Vercel:
+- `NEXT_PUBLIC_ADMIN_APP_URL` = your admin panel URL (e.g. `https://humorprojectweek6adminpanel.vercel.app`)
+
 ## Accessing your Supabase database
 
 1. Go to **[Supabase Dashboard](https://supabase.com/dashboard)** and sign in.
