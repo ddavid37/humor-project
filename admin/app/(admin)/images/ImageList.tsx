@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-type ImageRow = { id: string; url: string | null; is_common_use?: boolean; created_at?: string }
+type ImageRow = { id: string; url: string | null; is_common_use?: boolean }
 
 export function ImageList({ images }: { images: ImageRow[] }) {
     const router = useRouter()
@@ -45,7 +45,6 @@ export function ImageList({ images }: { images: ImageRow[] }) {
                         <th className="p-3 text-slate-400 font-medium">Preview</th>
                         <th className="p-3 text-slate-400 font-medium">URL</th>
                         <th className="p-3 text-slate-400 font-medium">Common use</th>
-                        <th className="p-3 text-slate-400 font-medium">Created</th>
                         <th className="p-3 text-slate-400 font-medium">Actions</th>
                     </tr>
                 </thead>
@@ -80,11 +79,6 @@ export function ImageList({ images }: { images: ImageRow[] }) {
                             </td>
                             <td className="p-3 text-slate-400">
                                 {img.is_common_use ? 'Yes' : 'No'}
-                            </td>
-                            <td className="p-3 text-slate-400 text-xs">
-                                {img.created_at
-                                    ? new Date(img.created_at).toLocaleString()
-                                    : '—'}
                             </td>
                             <td className="p-3">
                                 {editingId === img.id ? (

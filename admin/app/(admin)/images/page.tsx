@@ -6,8 +6,8 @@ export default async function ImagesPage() {
     const supabase = await createSupabaseServerClient()
     const { data: images, error } = await supabase
         .from('images')
-        .select('id, url, is_common_use, created_at')
-        .order('created_at', { ascending: false })
+        .select('id, url, is_common_use')
+        .order('id', { ascending: false })
 
     return (
         <div>

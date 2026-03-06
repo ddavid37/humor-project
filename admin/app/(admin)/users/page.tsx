@@ -4,8 +4,8 @@ export default async function UsersPage() {
     const supabase = await createSupabaseServerClient()
     const { data: profiles, error } = await supabase
         .from('profiles')
-        .select('id, is_superadmin, created_at')
-        .order('created_at', { ascending: false })
+        .select('id, is_superadmin')
+        .order('id')
 
     if (error) {
         return (
@@ -26,7 +26,6 @@ export default async function UsersPage() {
                         <tr className="border-b border-slate-700">
                             <th className="p-3 text-slate-400 font-medium">ID</th>
                             <th className="p-3 text-slate-400 font-medium">Superadmin</th>
-                            <th className="p-3 text-slate-400 font-medium">Created</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,11 +40,6 @@ export default async function UsersPage() {
                                     ) : (
                                         <span className="text-slate-500">No</span>
                                     )}
-                                </td>
-                                <td className="p-3 text-slate-400">
-                                    {p.created_at
-                                        ? new Date(p.created_at).toLocaleString()
-                                        : '—'}
                                 </td>
                             </tr>
                         ))}

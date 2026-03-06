@@ -1,6 +1,13 @@
 import { createSupabaseServerClient } from '@/lib/supabaseServer'
 import Link from 'next/link'
 
+function captionText(row: Record<string, unknown>): string {
+    return String(
+        row.caption ?? row.content ?? row.body ?? row.text ?? row.description ?? row.title ??
+        (Object.values(row).find(v => typeof v === 'string' && v !== row.image_url) ?? '')
+    )
+}
+
 export default async function DashboardPage() {
     const supabase = await createSupabaseServerClient()
 
@@ -30,12 +37,12 @@ export default async function DashboardPage() {
 
     const { data: recentImages } = await supabase
         .from('images')
-        .select('id, url, created_at')
-        .order('created_at', { ascending: false })
+        .select('id, url')
+        .order('id', { ascending: false })
         .limit(5)
 
     const { data: topCaptionsData } = topCaptionIds.length
-        ? await supabase.from('captions').select('id, caption, image_id').in('id', topCaptionIds)
+        ? await supabase.from('captions').select('*').in('id', topCaptionIds)
         : { data: [] }
     const topCaptionsMap = new Map((topCaptionsData ?? []).map((c) => [c.id, c]))
 
@@ -78,7 +85,7 @@ export default async function DashboardPage() {
                                         <span className="text-amber-400 font-mono w-6">#{i + 1}</span>
                                         <span className="text-slate-400">+{score}</span>
                                         <span className="text-slate-300 truncate flex-1">
-                                            {c?.caption ?? '(no text)'}
+                                            {c ? captionText(c as Record<string, unknown>) : '(no text)'}
                                         </span>
                                     </li>
                                 )
@@ -106,11 +113,6 @@ export default async function DashboardPage() {
                                     )}
                                     <div className="min-w-0 flex-1">
                                         <p className="text-slate-300 truncate">{img.url ?? '—'}</p>
-                                        <p className="text-slate-500 text-xs">
-                                            {img.created_at
-                                                ? new Date(img.created_at).toLocaleDateString()
-                                                : '—'}
-                                        </p>
                                     </div>
                                     <Link
                                         href={`/images?highlight=${img.id}`}
