@@ -17,7 +17,7 @@ export default async function DashboardPage() {
         { count: captionsCount },
         { count: votesCount },
     ] = await Promise.all([
-        supabase.from('profiles').select('*', { count: 'exact', head: true }),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }),
         supabase.from('images').select('*', { count: 'exact', head: true }),
         supabase.from('captions').select('*', { count: 'exact', head: true }),
         supabase.from('caption_votes').select('*', { count: 'exact', head: true }),
