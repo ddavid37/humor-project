@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { requireSuperAdmin } from '@/lib/auth'
+import { LogoutButton } from '@/components/LogoutButton'
 
 export default async function AdminLayout({
     children,
@@ -34,6 +35,7 @@ export default async function AdminLayout({
                         >
                             View main site
                         </a>
+                        <LogoutButton />
                         <span className="text-sm text-slate-500">Admin</span>
                     </div>
                 </div>
