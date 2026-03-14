@@ -36,6 +36,12 @@ From the **root** of the `humor-project` repo:
 bash week8/scripts/prepare-standalone.sh
 ```
 
+Or from inside `week8/`:
+
+```bash
+bash scripts/prepare-standalone.sh
+```
+
 This copies `week8/` to `../prompt-chain-tool` (no `.next`, `node_modules`, or `.env`), runs `npm install` there, and runs `git init`. To use a different folder:
 
 ```bash
