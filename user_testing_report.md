@@ -51,7 +51,7 @@
 - Experience with similar apps: minimal
 
 ### 2. Observation context
-- Location: remote (Zoom call)
+- Location: in person
 - Device: laptop
 - Instructions given: I asked him to sign in, vote on the current caption, click `Next →`, then upload an image and click “Generate captions.”
 - Tasks or free exploration: follow the UI flow once (vote + next, then upload + generate).
@@ -84,7 +84,7 @@
 ## User study: Connor Whelan
 
 ### 1. User information
-- Relationship: co-founder (out of school)
+- Relationship: co-founder (very tech-savvy)
 - Prior use of this app: none
 - Experience with similar apps: extensive
 
