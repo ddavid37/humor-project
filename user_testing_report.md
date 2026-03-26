@@ -84,7 +84,7 @@
 ## User study: Connor Whelan
 
 ### 1. User information
-- Relationship: partner
+- Relationship: co-founder (out of school)
 - Prior use of this app: none
 - Experience with similar apps: extensive
 
@@ -120,7 +120,13 @@
 ---
 
 ## Final summary (all three studies)
-- What I learned from observing
-- What surprised me
-- Patterns across users
-- At least three specific improvements I plan to make (tied to observations)
+- What I learned from observing: Users understood the two-panel layout (rate on the left, generate on the right) and could complete the main flow, but they needed clearer guidance for the image-upload/generate step.
+- What surprised me: Even tech-aware users still hesitated on *which* upload control to use and checked the UI multiple times while waiting for generation to finish.
+- Patterns across users:
+  - Left/right layout was easy to interpret.
+  - The most common confusion was around uploading/selecting an image and knowing when generation is “done.”
+  - After “Next,” users sometimes paused to confirm the caption/vote controls correspond to the new item.
+- Improvements I plan to make (tied to observations):
+  - Make the upload action more explicit with one clear primary CTA (reduce “click box vs choose button” hesitation).
+  - Add clearer loading + completion feedback (e.g., stronger “Generating…” state and an obvious “Caption ready” moment).
+  - When clicking `Next`, add a stronger visual cue that the caption/voting area updated (so users don’t re-check as much).
