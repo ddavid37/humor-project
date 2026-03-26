@@ -123,8 +123,8 @@
 - What I learned from observing: Users understood the two-panel layout (rate on the left, generate on the right) and could complete the main flow, but they needed clearer guidance for the image-upload/generate step.
 - What surprised me: Even tech-aware users still hesitated on *which* upload control to use and checked the UI multiple times while waiting for generation to finish.
 - Patterns across users:
-  - Left/right layout was easy to interpret.
-  - The most common confusion was around uploading/selecting an image and knowing when generation is “done.”
+  - Left/right layout was easy to interpret -- especially when it all alighned to each other in a grid like.
+  - The most common confusion was around uploading/selecting an image and knowing when the generation is “done.”
   - After “Next,” users sometimes paused to confirm the caption/vote controls correspond to the new item.
 - Improvements I plan to make (tied to observations):
   - Make the upload action more explicit with one clear primary CTA (reduce “click box vs choose button” hesitation).
