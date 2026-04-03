@@ -55,19 +55,16 @@ export default async function FlavorsPage() {
             className="flex items-center justify-between rounded-lg border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800"
           >
             <div className="min-w-0">
-              <div className="flex items-baseline gap-2">
-                <span className="truncate font-medium">
-                  {nameKey ? String(f[nameKey] ?? f.id) : String(f.id)}
-                </span>
-                <span className="font-mono text-xs text-slate-500">
-                  {String(f.id)}
-                </span>
-              </div>
-              {descriptionKey && f[descriptionKey] && (
-                <p className="mt-1 line-clamp-2 text-sm text-slate-500 dark:text-slate-400">
-                  {String(f[descriptionKey])}
-                </p>
-              )}
+              <p className="truncate text-base font-semibold">
+                {descriptionKey && f[descriptionKey]
+                  ? String(f[descriptionKey])
+                  : nameKey
+                    ? String(f[nameKey] ?? f.id)
+                    : String(f.id)}
+              </p>
+              <span className="font-mono text-xs text-slate-500">
+                ID: {String(f.id)}
+              </span>
             </div>
             <Link
               href={`/flavors/${f.id}`}
