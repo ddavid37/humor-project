@@ -38,6 +38,7 @@ export function FlavorDetail({
     humor_flavor_id: String(flavor.id),
     order_by: String(steps.length),
   });
+  const [addStepError, setAddStepError] = useState<string | null>(null);
 
   const flavorId = String(flavor.id);
 
@@ -114,22 +115,34 @@ export function FlavorDetail({
   };
 
   const submitAddStep = async () => {
-    const body = { ...addStepVals, humor_flavor_id: flavorId };
-    if (body.order_by === "" && steps.length > 0) {
+    setAddStepError(null);
+    const raw = { ...addStepVals, humor_flavor_id: flavorId };
+    if (raw.order_by === "" && steps.length > 0) {
       const maxOrder = Math.max(
         ...steps.map((s) => Number((s as Record<string, unknown>).order_by) ?? 0)
       );
-      body.order_by = String(maxOrder + 1);
+      raw.order_by = String(maxOrder + 1);
     }
-    const res = await fetch("/api/steps", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (res.ok) {
+    const body: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(raw)) {
+      if (v !== "") body[k] = v;
+    }
+    try {
+      const res = await fetch("/api/steps", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setAddStepError(data.error || `Failed (${res.status})`);
+        return;
+      }
       setShowAddStep(false);
       setAddStepVals({ humor_flavor_id: flavorId, order_by: String(steps.length + 1) });
       router.refresh();
+    } catch (e) {
+      setAddStepError(e instanceof Error ? e.message : "Network error");
     }
   };
 
@@ -226,6 +239,9 @@ export function FlavorDetail({
                 />
               ))}
             </div>
+            {addStepError && (
+              <p className="mt-2 text-sm text-red-500">{addStepError}</p>
+            )}
             <div className="mt-2 flex gap-2">
               <button
                 type="button"
@@ -236,7 +252,7 @@ export function FlavorDetail({
               </button>
               <button
                 type="button"
-                onClick={() => setShowAddStep(false)}
+                onClick={() => { setShowAddStep(false); setAddStepError(null); }}
                 className="rounded border px-3 py-1 text-sm dark:border-slate-600"
               >
                 Cancel
