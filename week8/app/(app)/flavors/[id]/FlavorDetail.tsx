@@ -116,8 +116,8 @@ export function FlavorDetail({
 
   const submitAddStep = async () => {
     setAddStepError(null);
-    const raw = { ...addStepVals, humor_flavor_id: flavorId };
-    if (raw.order_by === "" && steps.length > 0) {
+    const raw: Record<string, string> = { ...addStepVals, humor_flavor_id: flavorId };
+    if ((!raw.order_by || raw.order_by === "") && steps.length > 0) {
       const maxOrder = Math.max(
         ...steps.map((s) => Number((s as Record<string, unknown>).order_by) ?? 0)
       );
