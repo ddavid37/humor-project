@@ -25,10 +25,22 @@ export default async function FlavorDetailPage({
     .eq("humor_flavor_id", id)
     .order("order_by", { ascending: true });
 
-  const stepCols =
+  let stepCols: string[] =
     steps?.length && steps[0]
       ? (Object.keys(steps[0] as object) as string[])
       : [];
+
+  if (stepCols.length === 0) {
+    const { data: sampleStep } = await supabase
+      .from("humor_flavor_steps")
+      .select("*")
+      .limit(1)
+      .single();
+    if (sampleStep) {
+      stepCols = Object.keys(sampleStep as object);
+    }
+  }
+
   const insertStepCols = stepCols.filter(
     (c) =>
       c !== "id" &&
