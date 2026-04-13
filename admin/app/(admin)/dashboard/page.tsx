@@ -25,12 +25,12 @@ export default async function DashboardPage() {
 
     const { data: allVotes } = await supabase
         .from('caption_votes')
-        .select('caption_id, vote_value, user_id')
+        .select('caption_id, vote_value, profile_id')
 
     const votes = allVotes ?? []
     const totalUpvotes = votes.filter(v => (v.vote_value ?? 0) > 0).length
     const totalDownvotes = votes.filter(v => (v.vote_value ?? 0) < 0).length
-    const uniqueVoters = new Set(votes.map(v => v.user_id)).size
+    const uniqueVoters = new Set(votes.map(v => v.profile_id)).size
 
     const byCaption: Record<string, { sum: number; up: number; down: number; total: number }> = {}
     for (const v of votes) {
