@@ -14,16 +14,16 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
     const router = useRouter()
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [voted, setVoted] = useState<'up' | 'down' | null>(null)
 
     const nextPage = currentPage < totalPages ? currentPage + 1 : 1
 
-    // Reset state whenever the caption changes (client-side nav reuses this component)
     useEffect(() => {
         setLoading(false)
         setError(null)
+        setVoted(null)
     }, [captionId])
 
-    // Prefetch the next page as soon as this component mounts
     useEffect(() => {
         router.prefetch(`/protected?page=${nextPage}`)
     }, [router, nextPage])
@@ -36,6 +36,7 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
 
         setLoading(true)
         setError(null)
+        setVoted(vote === 1 ? 'up' : 'down')
 
         try {
             const res = await fetch(`/api/captions/${captionId}/vote`, {
@@ -59,6 +60,7 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
             router.push(`/protected?page=${nextPage}`)
         } catch (e: unknown) {
             setError(e instanceof Error ? e.message : 'Failed to vote')
+            setVoted(null)
         } finally {
             setLoading(false)
         }
@@ -70,16 +72,20 @@ export function VoteButtons({ captionId, isLoggedIn, currentPage, totalPages }: 
                 <button
                     onClick={() => handleVote(1)}
                     disabled={loading || !isLoggedIn}
-                    className="flex-1 py-2.5 rounded-xl bg-green-500 text-white font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-green-600 active:scale-95 transition-all"
+                    className={`flex-1 py-2.5 rounded-xl text-white font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all ${
+                        voted === 'up' ? 'bg-green-700 scale-95' : 'bg-green-500 hover:bg-green-600'
+                    }`}
                 >
-                    👍 Upvote
+                    {voted === 'up' ? '✓ Voted!' : '👍 Upvote'}
                 </button>
                 <button
                     onClick={() => handleVote(-1)}
                     disabled={loading || !isLoggedIn}
-                    className="flex-1 py-2.5 rounded-xl bg-red-500 text-white font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed hover:bg-red-600 active:scale-95 transition-all"
+                    className={`flex-1 py-2.5 rounded-xl text-white font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all ${
+                        voted === 'down' ? 'bg-red-700 scale-95' : 'bg-red-500 hover:bg-red-600'
+                    }`}
                 >
-                    👎 Downvote
+                    {voted === 'down' ? '✓ Voted!' : '👎 Downvote'}
                 </button>
             </div>
             {error && <span className="text-xs text-red-500 text-center">{error}</span>}
