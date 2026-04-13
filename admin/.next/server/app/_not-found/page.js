@@ -1,0 +1,13 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_not-found/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__64ba07b2._.js")
+R.c("server/chunks/ssr/b176a_next_dist_7672da9a._.js")
+R.c("server/chunks/ssr/b176a_next_dist_esm_build_templates_app-page_f66816d5.js")
+R.c("server/chunks/ssr/[root-of-the-server]__eb9c2cb2._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__98c31fa8._.js")
+R.c("server/chunks/ssr/b176a_next_dist_a3a662d2._.js")
+R.c("server/chunks/ssr/Desktop_humor-project_admin_app_layout_tsx_4f8d3157._.js")
+R.c("server/chunks/ssr/b176a_next_dist_client_components_80626942._.js")
+R.c("server/chunks/ssr/b176a_next_dist_client_components_builtin_forbidden_de059478.js")
+R.c("server/chunks/ssr/3d860_humor-project_admin__next-internal_server_app__not-found_page_actions_df52fd53.js")
+R.m(23945)
+module.exports=R.m(23945).exports

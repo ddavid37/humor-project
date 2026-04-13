@@ -1,0 +1,3 @@
+{
+  "/(admin)/whitelist-emails/page": "app/(admin)/whitelist-emails/page.js"
+}

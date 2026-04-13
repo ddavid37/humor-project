@@ -1,0 +1,277 @@
+{
+  "version": 3,
+  "pages404": true,
+  "appType": "app",
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [
+    {
+      "page": "/api/allowed-signup-domains/[id]",
+      "regex": "^/api/allowed\\-signup\\-domains/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/allowed\\-signup\\-domains/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/caption-examples/[id]",
+      "regex": "^/api/caption\\-examples/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/caption\\-examples/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/humor-mix/[id]",
+      "regex": "^/api/humor\\-mix/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/humor\\-mix/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/images/[id]",
+      "regex": "^/api/images/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/images/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/llm-models/[id]",
+      "regex": "^/api/llm\\-models/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/llm\\-models/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/llm-providers/[id]",
+      "regex": "^/api/llm\\-providers/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/llm\\-providers/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/terms/[id]",
+      "regex": "^/api/terms/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/terms/(?<nxtPid>[^/]+?)(?:/)?$"
+    },
+    {
+      "page": "/api/whitelist-emails/[id]",
+      "regex": "^/api/whitelist\\-emails/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPid": "nxtPid"
+      },
+      "namedRegex": "^/api/whitelist\\-emails/(?<nxtPid>[^/]+?)(?:/)?$"
+    }
+  ],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/allowed-signup-domains",
+      "regex": "^/allowed\\-signup\\-domains(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/allowed\\-signup\\-domains(?:/)?$"
+    },
+    {
+      "page": "/api/allowed-signup-domains",
+      "regex": "^/api/allowed\\-signup\\-domains(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/allowed\\-signup\\-domains(?:/)?$"
+    },
+    {
+      "page": "/api/caption-examples",
+      "regex": "^/api/caption\\-examples(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/caption\\-examples(?:/)?$"
+    },
+    {
+      "page": "/api/images",
+      "regex": "^/api/images(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/images(?:/)?$"
+    },
+    {
+      "page": "/api/llm-models",
+      "regex": "^/api/llm\\-models(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/llm\\-models(?:/)?$"
+    },
+    {
+      "page": "/api/llm-providers",
+      "regex": "^/api/llm\\-providers(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/llm\\-providers(?:/)?$"
+    },
+    {
+      "page": "/api/terms",
+      "regex": "^/api/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/terms(?:/)?$"
+    },
+    {
+      "page": "/api/whitelist-emails",
+      "regex": "^/api/whitelist\\-emails(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/whitelist\\-emails(?:/)?$"
+    },
+    {
+      "page": "/auth/callback",
+      "regex": "^/auth/callback(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/auth/callback(?:/)?$"
+    },
+    {
+      "page": "/caption-examples",
+      "regex": "^/caption\\-examples(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/caption\\-examples(?:/)?$"
+    },
+    {
+      "page": "/caption-requests",
+      "regex": "^/caption\\-requests(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/caption\\-requests(?:/)?$"
+    },
+    {
+      "page": "/captions",
+      "regex": "^/captions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/captions(?:/)?$"
+    },
+    {
+      "page": "/dashboard",
+      "regex": "^/dashboard(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/dashboard(?:/)?$"
+    },
+    {
+      "page": "/forbidden",
+      "regex": "^/forbidden(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/forbidden(?:/)?$"
+    },
+    {
+      "page": "/humor-flavor-steps",
+      "regex": "^/humor\\-flavor\\-steps(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/humor\\-flavor\\-steps(?:/)?$"
+    },
+    {
+      "page": "/humor-flavors",
+      "regex": "^/humor\\-flavors(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/humor\\-flavors(?:/)?$"
+    },
+    {
+      "page": "/humor-mix",
+      "regex": "^/humor\\-mix(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/humor\\-mix(?:/)?$"
+    },
+    {
+      "page": "/images",
+      "regex": "^/images(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/images(?:/)?$"
+    },
+    {
+      "page": "/llm-models",
+      "regex": "^/llm\\-models(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/llm\\-models(?:/)?$"
+    },
+    {
+      "page": "/llm-prompt-chains",
+      "regex": "^/llm\\-prompt\\-chains(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/llm\\-prompt\\-chains(?:/)?$"
+    },
+    {
+      "page": "/llm-providers",
+      "regex": "^/llm\\-providers(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/llm\\-providers(?:/)?$"
+    },
+    {
+      "page": "/llm-responses",
+      "regex": "^/llm\\-responses(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/llm\\-responses(?:/)?$"
+    },
+    {
+      "page": "/terms",
+      "regex": "^/terms(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/terms(?:/)?$"
+    },
+    {
+      "page": "/users",
+      "regex": "^/users(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/users(?:/)?$"
+    },
+    {
+      "page": "/whitelist-emails",
+      "regex": "^/whitelist\\-emails(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/whitelist\\-emails(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

@@ -1,0 +1,3 @@
+{
+  "/api/allowed-signup-domains/[id]/route": "app/api/allowed-signup-domains/[id]/route.js"
+}

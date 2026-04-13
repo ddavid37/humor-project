@@ -39,6 +39,7 @@ export function FlavorDetail({
     order_by: String(steps.length),
   });
   const [addStepError, setAddStepError] = useState<string | null>(null);
+  const [duplicating, setDuplicating] = useState(false);
 
   const flavorId = String(flavor.id);
 
@@ -146,6 +147,31 @@ export function FlavorDetail({
     }
   };
 
+  const duplicateFlavor = async () => {
+    const currentName = nameKey ? String(flavor[nameKey] ?? "") : "";
+    const newName = prompt("Name for the duplicate:", `Copy of ${currentName}`);
+    if (!newName) return;
+    setDuplicating(true);
+    try {
+      const res = await fetch(`/api/flavors/${flavorId}/duplicate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newName }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Failed to duplicate");
+        return;
+      }
+      router.push(`/flavors/${data.id}`);
+      router.refresh();
+    } catch {
+      alert("Network error while duplicating");
+    } finally {
+      setDuplicating(false);
+    }
+  };
+
   const nameKey = Object.keys(flavor).find(
     (k) => k.toLowerCase().includes("name") || k.toLowerCase().includes("title")
   );
@@ -206,6 +232,14 @@ export function FlavorDetail({
               className="rounded bg-amber-600 px-3 py-1 text-white"
             >
               Edit flavor
+            </button>
+            <button
+              type="button"
+              onClick={duplicateFlavor}
+              disabled={duplicating}
+              className="rounded border border-indigo-400 px-3 py-1 text-indigo-600 dark:text-indigo-400 text-sm hover:bg-indigo-50 dark:hover:bg-indigo-900/30 disabled:opacity-50 transition-colors"
+            >
+              {duplicating ? "Duplicating…" : "Duplicate flavor"}
             </button>
           </div>
         )}

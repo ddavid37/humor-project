@@ -1,0 +1,3 @@
+{
+  "/(admin)/llm-responses/page": "app/(admin)/llm-responses/page.js"
+}

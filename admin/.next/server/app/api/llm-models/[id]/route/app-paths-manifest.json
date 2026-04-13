@@ -1,0 +1,3 @@
+{
+  "/api/llm-models/[id]/route": "app/api/llm-models/[id]/route.js"
+}

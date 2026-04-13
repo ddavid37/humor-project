@@ -1,0 +1,3 @@
+{
+  "/api/whitelist-emails/route": "app/api/whitelist-emails/route.js"
+}

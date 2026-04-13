@@ -1,0 +1,3 @@
+{
+  "/(admin)/llm-prompt-chains/page": "app/(admin)/llm-prompt-chains/page.js"
+}
